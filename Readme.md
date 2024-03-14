@@ -18,7 +18,7 @@
 - <code>python elonmusk.py</code> 
 
 <h2>Настройки:</h2>
-- run = ScraperElon(10) <code>10</code> - сколько постов нужно получить
+- run = ScraperElon(username='', quantity=10) <code>username</code> - чьи посты нужно получить | <code>quantity</code> - сколько постов нужно получить
 
 Теперь получаем токен, на случай, если парсер не работает:<br>
 <code>F12 >> сеть' >> Fetch/XHR >> UserTweeets >> Файлы cookie >> gt</code>
