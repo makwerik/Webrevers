@@ -20,4 +20,3 @@
 <h2>Настройки:</h2>
 - run = ScraperElon(username='', quantity=10, proxy=None) <code>username</code> - чьи посты нужно получить | <code>quantity</code> - сколько постов нужно получить |  <code>proxy</code> - прокси
 
-![Screen](https://github.com/makwerik/Webrevers/blob/master/img/screen.PNG)
