@@ -20,3 +20,5 @@
 <h2>Настройки:</h2>
 - run = ScraperElon(username='', quantity=10, proxy=None) <code>username</code> - чьи посты нужно получить | <code>quantity</code> - сколько постов нужно получить |  <code>proxy</code> - прокси
 
+Используются так же рандомные юзер-агенты, токен теперь получаем через selenium, потому что requests не отдаёт все куки. Так же в selenium нужно добавить прокси
+
