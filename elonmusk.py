@@ -1,12 +1,14 @@
 import json
-
+from selenium import webdriver
 import yaml
 import requests
+from fake_useragent import UserAgent
 
 
 class ScraperElon:
     URL = "https://api.twitter.com/graphql/eS7LO5Jy3xgmd3dbL044EA/UserTweets"
     URL_ID = "https://api.twitter.com/graphql/k5XapwcSikNsEsILW5FvgA/UserByScreenName"
+    TOKEN = "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
 
     def __init__(self, username: str, quantity: int, proxy: str = None):
         """Initializing the configuration and how many posts you need to get"""
@@ -15,9 +17,44 @@ class ScraperElon:
             data_ = yaml.load(f_, Loader=yaml.FullLoader)
         self.username = username
         self.quantity = quantity + 1
-        self.headers = data_.get('headers')
-        self.params = self.__collecting_parameters()
         self.proxy = {'http': proxy, 'https': proxy} if proxy else None
+        self.headers = self.__get_headers()
+        self.params = self.__collecting_parameters()
+
+    def __get_headers(self):
+        """Method for getting headers"""
+        useragent = UserAgent()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+
+        driver = webdriver.Chrome(options=options)
+
+        driver.get("https://twitter.com/")
+
+        cookies = {}
+        for cookie in driver.get_cookies():
+            cookies[cookie['name']] = cookie['value']
+        headers = {
+            'authority': 'api.twitter.com',
+            'accept': '*/*',
+            'accept-language': 'ru,en;q=0.9',
+            'authorization': f'Bearer {self.TOKEN}',
+            'content-type': 'application/json',
+            'origin': 'https://twitter.com',
+            'referer': 'https://twitter.com/',
+            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "YaBrowser";v="24.1", "Yowser";v="2.5"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'user-agent': f'{useragent.random}',
+            'x-client-transaction-id': '6uK+6nC7ghVIkBnUvJOWZicz4lQbudUjPUXplkZ6ExbyjDyNdMlvddWRNtubXD7rA3zVSetIyBmC8VASqIeNwgEBMmuK6w',
+            'x-guest-token': cookies.get('gt'),
+            'x-twitter-active-user': 'yes',
+            'x-twitter-client-language': 'ru',
+        }
+        return headers
 
     def __collecting_parameters(self):
         """Method for collecting parameters"""
