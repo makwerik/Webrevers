@@ -23,3 +23,5 @@
 Теперь получаем токен, на случай, если парсер не работает:<br>
 <code>F12 >> сеть' >> Fetch/XHR >> UserTweeets >> Файлы cookie >> gt</code>
 - <code>config_twitter/cfg.yaml >> 'x-guest-token': 'Сюда вставляем значение gt'</code>
+
+![Screen](https://github.com/makwerik/Webrevers/blob/master/img/screen.PNG)
