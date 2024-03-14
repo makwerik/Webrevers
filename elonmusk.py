@@ -8,7 +8,7 @@ class ScraperElon:
     URL = "https://api.twitter.com/graphql/eS7LO5Jy3xgmd3dbL044EA/UserTweets"
     URL_ID = "https://api.twitter.com/graphql/k5XapwcSikNsEsILW5FvgA/UserByScreenName"
 
-    def __init__(self, username: str, quantity: int):
+    def __init__(self, username: str, quantity: int, proxy: str = None):
         """Initializing the configuration and how many posts you need to get"""
 
         with open('config_twitter/cfg.yaml', encoding='utf8') as f_:
@@ -17,6 +17,7 @@ class ScraperElon:
         self.quantity = quantity + 1
         self.headers = data_.get('headers')
         self.params = self.__collecting_parameters()
+        self.proxy = {'http': proxy, 'https': proxy} if proxy else None
 
     def __collecting_parameters(self):
         """Method for collecting parameters"""
@@ -48,6 +49,7 @@ class ScraperElon:
             url=self.URL_ID,
             params=params,
             headers=self.headers,
+            proxies=self.proxy
         ).json().get('data').get('user').get('result').get('rest_id')
 
         return response
@@ -60,7 +62,7 @@ class ScraperElon:
     def get_posts(self):
         """Post parsing"""
 
-        response = requests.get(self.URL, headers=self.headers, params=self.params)
+        response = requests.get(self.URL, headers=self.headers, params=self.params, proxies=self.proxy)
 
         if response.status_code == 200:
             posts = response.json().get('data').get('user').get('result').get('timeline_v2').get('timeline') \
