@@ -18,10 +18,5 @@
 - <code>python elonmusk.py</code> 
 
 <h2>Настройки:</h2>
-- run = ScraperElon(username='', quantity=10) <code>username</code> - чьи посты нужно получить | <code>quantity</code> - сколько постов нужно получить
+- run = ScraperElon(username='', quantity=10, proxy=None) <code>username</code> - чьи посты нужно получить | <code>quantity</code> - сколько постов нужно получить |  <code>proxy</code> - прокси
 
-Теперь получаем токен, на случай, если парсер не работает:<br>
-<code>F12 >> сеть' >> Fetch/XHR >> UserTweeets >> Файлы cookie >> gt</code>
-- <code>config_twitter/cfg.yaml >> 'x-guest-token': 'Сюда вставляем значение gt'</code>
-
-![Screen](https://github.com/makwerik/Webrevers/blob/master/img/screen.PNG)
