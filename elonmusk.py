@@ -13,8 +13,7 @@ class ScraperElon:
     def __init__(self, username: str, quantity: int, proxy: str = None):
         """Initializing the configuration and how many posts you need to get"""
 
-        with open('config_twitter/cfg.yaml', encoding='utf8') as f_:
-            data_ = yaml.load(f_, Loader=yaml.FullLoader)
+
         self.username = username
         self.quantity = quantity + 1
         self.proxy = {'http': proxy, 'https': proxy} if proxy else None
