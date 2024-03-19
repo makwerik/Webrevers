@@ -1,0 +1,20 @@
+{
+    "authority": "api.twitter.com",
+    "accept": "*/*",
+    "accept-language": "ru,en;q=0.9",
+    "authorization": "",
+    "content-type": "application/json",
+    "origin": "https://twitter.com",
+    "referer": "https://twitter.com/",
+    "sec-ch-ua": "\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\", \"YaBrowser\";v=\"24.1\", \"Yowser\";v=\"2.5\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site",
+    "user-agent": "",
+    "x-client-transaction-id": "6uK+6nC7ghVIkBnUvJOWZicz4lQbudUjPUXplkZ6ExbyjDyNdMlvddWRNtubXD7rA3zVSetIyBmC8VASqIeNwgEBMmuK6w",
+    "x-guest-token": "",
+    "x-twitter-active-user": "yes",
+    "x-twitter-client-language": "ru"
+}
