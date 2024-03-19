@@ -1,4 +1,5 @@
 import json
+import re
 
 import requests
 from fake_useragent import UserAgent
@@ -7,39 +8,60 @@ from fake_useragent import UserAgent
 class ScrapperTwitter:
     URL = "https://api.twitter.com/graphql/eS7LO5Jy3xgmd3dbL044EA/UserTweets"
     URL_ID = "https://api.twitter.com/graphql/k5XapwcSikNsEsILW5FvgA/UserByScreenName"
-    TOKEN = "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
 
     def __init__(self, username: str, quantity: int, proxy: str = None):
         """Initializing the parameters"""
 
         useragent = UserAgent()
-        agent007 = useragent.random
+        self.agent007 = useragent.random
         self.username = username
         self.quantity = quantity + 1
         self.proxy = {'http': proxy, 'https': proxy} if proxy else None
-        self.headers = {
-            'authority': 'api.twitter.com',
-            'accept': '*/*',
-            'accept-language': 'ru,en;q=0.9',
-            'authorization': f'Bearer {self.TOKEN}',
-            'content-type': 'application/json',
-            'origin': 'https://twitter.com',
-            'referer': 'https://twitter.com/',
-            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "YaBrowser";v="24.1", "Yowser";v="2.5"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-site',
-            'user-agent': f'{agent007}',
-            'x-client-transaction-id': '6uK+6nC7ghVIkBnUvJOWZicz4lQbudUjPUXplkZ6ExbyjDyNdMlvddWRNtubXD7rA3zVSetIyBmC8VASqIeNwgEBMmuK6w',
-            'x-guest-token': '',
-            'x-twitter-active-user': 'yes',
-            'x-twitter-client-language': 'ru',
-        }
-        gt = requests.post('https://api.twitter.com/1.1/guest/activate.json', headers=self.headers).json()
-        self.headers['x-guest-token'] = gt.get('guest_token')
+        self.__set_bearer()
+        self._set_agent()
+        self.__set_guest_id()
+        self.headers = self.__read_cfg()
         self.params = self.__collecting_parameters()
+
+    @staticmethod
+    def __read_cfg():
+        """Read cfg.json"""
+        with open('cfg.json', 'r', encoding='utf8') as r:
+            cfg = json.load(r)
+        return cfg
+
+    def __set_bearer(self):
+        """Set token Bearer"""
+
+        with open('cfg.json', 'r', encoding='utf8') as data:
+            result = json.load(data)
+
+        token = requests.get('https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js', proxies=self.proxy).text
+        result['authorization'] = "Bearer " + re.search(r"s=\"([\w\%]{104})\"", token)[1]
+
+        with open('cfg.json', 'w', encoding='utf8') as new_data:
+            json.dump(result, new_data, ensure_ascii=False, indent=4)
+
+    def __set_guest_id(self):
+        """Set token guest_id"""
+        with open('cfg.json', 'r', encoding='utf8') as data:
+            result = json.load(data)
+
+        gt = requests.post('https://api.twitter.com/1.1/guest/activate.json', headers=result, proxies=self.proxy).json()
+        result['x-guest-token'] = gt.get('guest_token')
+
+        with open('cfg.json', 'w', encoding='utf8') as new_data:
+            json.dump(result, new_data, ensure_ascii=False, indent=4)
+
+    def _set_agent(self):
+        """Set fake_user_agent"""
+        with open('cfg.json', 'r', encoding='utf8') as data:
+            result = json.load(data)
+
+        result['user-agent'] = self.agent007
+
+        with open('cfg.json', 'w', encoding='utf8') as new_data:
+            json.dump(result, new_data, ensure_ascii=False, indent=4)
 
     def __collecting_parameters(self):
         """Method for collecting parameters"""
@@ -92,8 +114,9 @@ class ScrapperTwitter:
                     2].get('entries')
 
             for i in range(0, self.quantity):
-                self.__writing_txt(posts[i].get('content').get('itemContent').get('tweet_results').get('result').get('legacy').get(
-                    'full_text'))
+                self.__writing_txt(
+                    posts[i].get('content').get('itemContent').get('tweet_results').get('result').get('legacy').get(
+                        'full_text'))
         else:
             print(f'Status code {response}')
 
